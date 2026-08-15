@@ -1,5 +1,13 @@
 🇬🇧 [English](README.md) | 🇭🇺 [Magyar](README.hu.md)
 
+[![CI](https://github.com/miklosbagi/invforge/actions/workflows/ci.yml/badge.svg)](https://github.com/miklosbagi/invforge/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/miklosbagi/invforge/actions/workflows/codeql.yml/badge.svg)](https://github.com/miklosbagi/invforge/actions/workflows/codeql.yml)
+[![Latest release](https://img.shields.io/github/v/release/miklosbagi/invforge)](https://github.com/miklosbagi/invforge/releases/latest)
+[![Docker pulls](https://img.shields.io/docker/pulls/miklosbagi/invforge)](https://hub.docker.com/r/miklosbagi/invforge)
+[![Image size](https://img.shields.io/docker/image-size/miklosbagi/invforge/latest)](https://hub.docker.com/r/miklosbagi/invforge)
+[![License](https://img.shields.io/github/license/miklosbagi/invforge)](LICENSE)
+[![Maintained](https://img.shields.io/badge/maintained-yes-green.svg)](https://github.com/miklosbagi/invforge/graphs/commit-activity)
+
 # InvForge
 
 Egy hamis Modbus TCP inverter/BESS (akkumulátoros energiatároló rendszer),
