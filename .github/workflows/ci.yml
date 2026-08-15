@@ -5,6 +5,9 @@ on: [push, pull_request]
 jobs:
   unit:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      code-quality: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -14,7 +17,13 @@ jobs:
       - run: ruff format --check invforge tests
       - run: ruff check invforge tests
       - run: mypy
-      - run: python -m pytest tests/unit -q
+      - run: python -m pytest tests/unit -q --cov=invforge --cov-report=xml
+      - name: Upload coverage report
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/upload-code-coverage@v1
+        with:
+          file: coverage.xml
+          language: Python
 
   integration:
     runs-on: ubuntu-latest
