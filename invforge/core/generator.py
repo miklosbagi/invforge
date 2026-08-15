@@ -12,8 +12,13 @@ import re
 from dataclasses import dataclass
 from typing import Literal
 
-from .profile import Profile
-from .scenario import Scenario
+# Not a real runtime cycle: profile.py's reciprocal import of this module
+# is guarded by `if TYPE_CHECKING:` (see profile.py), which is False at
+# runtime, so Python never executes that import line. mypy resolves the
+# annotation-only cycle fine too, since every module here uses
+# `from __future__ import annotations`.
+from .profile import Profile  # codeql[py/unsafe-cyclic-import]
+from .scenario import Scenario  # codeql[py/unsafe-cyclic-import]
 
 _RAMP_RE = re.compile(
     r"^linear-(?P<direction>drain|charge)-(?P<start>\d+(?:\.\d+)?)-to-"

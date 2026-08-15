@@ -24,6 +24,12 @@ jobs:
         with:
           file: coverage.xml
           language: Python
+          # Soft-fail until "Code Quality" is enabled in this repo's
+          # Settings -> Code security page (no API for that toggle as of
+          # this writing, so it can't be flipped from here) -- without
+          # this, every CI run hard-fails on a 404 from the upload
+          # endpoint before that's turned on.
+          fail-on-error: false
 
   integration:
     runs-on: ubuntu-latest

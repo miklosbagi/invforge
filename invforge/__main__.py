@@ -49,6 +49,7 @@ def main() -> None:
         profile = profiles.get(args.vendor, firmware)
     except KeyError as e:
         parser.error(str(e))
+        return
     blocks = sim_server.build_blocks(profile)
     context = sim_server.build_context(blocks)
     state = SimState()
@@ -60,6 +61,7 @@ def main() -> None:
             scenario = resolve_scenario(args.scenario, profile)
         except (KeyError, ValueError) as e:
             parser.error(str(e))
+            return
         sim_server.apply_exceptions(blocks, scenario)
         sim_server.write_scenario_statics(blocks, profile, scenario)
         state.set_scenario(scenario, speed=args.speed)

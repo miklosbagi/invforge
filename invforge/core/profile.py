@@ -13,7 +13,11 @@ from typing import TYPE_CHECKING
 from .registers import RegisterDef
 
 if TYPE_CHECKING:
-    from .generator import RampParams
+    # Not a real runtime cycle -- this only ever executes for a type
+    # checker (TYPE_CHECKING is False at runtime), and generator.py's
+    # reciprocal import of Profile is fine to resolve after the fact
+    # since every module here uses `from __future__ import annotations`.
+    from .generator import RampParams  # codeql[py/unsafe-cyclic-import]
 
 
 @dataclass(frozen=True)
