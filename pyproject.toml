@@ -1,0 +1,19 @@
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+files = ["invforge"]
+
+[[tool.mypy.overrides]]
+# pymodbus ships no type stubs and its own source is unannotated; without
+# this, --strict flags every call into it as no-untyped-call. Treat it as
+# an opaque Any boundary rather than chasing stub coverage we don't own.
+module = "pymodbus.*"
+follow_imports = "skip"
+ignore_missing_imports = true

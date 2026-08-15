@@ -1,0 +1,9 @@
+-r requirements.txt
+pytest>=8.0
+ruff
+mypy
+types-PyYAML
+# httpx: integration tests' HTTP calls against the control API. Dev-only
+# deliberately -- the Docker runtime image (requirements.txt) doesn't
+# need it, only the test runner does.
+httpx>=0.27

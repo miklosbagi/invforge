@@ -1,0 +1,74 @@
+# Real register readings, captured live from a SigenStor EC 12.0 TP
+# (serial CMU110A144L0174) at 10.10.8.243 on 2026-08-13, while it was
+# actually running off-grid on battery (not a synthetic scenario).
+# Device was powered off after capture (driver implementation incomplete).
+#
+# Purpose: the simulator's first scenario should replay *real* behavior,
+# not just invented values -- this is ground truth to test the driver
+# against before any synthetic ramp/edge-case scenarios are trusted.
+#
+# Static registers (did not change across the capture window):
+static:
+  unit_247:
+    30051: 1        # plant_running_state -- single real sample, meaning still TBD (R2)
+    30027: 0        # general_alarm1
+    30028: 0        # general_alarm2
+    30029: 0        # general_alarm3
+    30030: 0        # general_alarm4
+    30072: 0        # general_alarm5
+    30280: 0        # general_alarm6
+    # 30281 (general_alarm7): a solo (count=1) read returns
+    # exception_code=2 (illegal data address) on the real device -- but
+    # this is a firmware quirk about the read's *starting* address, not
+    # about the register not existing (it decodes real data, 0xFFFF at
+    # capture time, when read as part of a range starting at/before
+    # 30280). Reproduced profile-wide via Profile.non_anchor_addresses
+    # (see registers.py / this firmware's __init__.py), not as a
+    # per-scenario exception here -- a blanket "always illegal" entry in
+    # this scenario's `exceptions:` block would incorrectly reject valid
+    # range reads too, which real hardware does not.
+    30047: 8812     # ess_avail_max_charge_power (raw, gain 1000 -> 8.812 kW)
+    30049: 14422    # ess_avail_max_discharge_power (raw, gain 1000 -> 14.422 kW)
+    30064: 1135     # ess_avail_max_charge_capacity (raw, gain 100 -> 11.35 kWh)
+    30066: 708      # ess_avail_max_discharge_capacity (raw, gain 100 -> 7.08 kWh)
+    30068: 8800     # ess_rated_charge_power (raw, gain 1000 -> 8.8 kW)
+    30070: 9600     # ess_rated_discharge_power (raw, gain 1000 -> 9.6 kW)
+    30083: 1808     # ess_rated_energy_capacity (raw, gain 100 -> 18.08 kWh)
+    30085: 1000     # ess_charge_cutoff_soc (raw, gain 10 -> 100.0%)
+    30086: 0        # ess_discharge_cutoff_soc (raw, gain 10 -> 0.0% -- no reserve floor configured)
+    30087: 1000     # ess_soh (raw, gain 10 -> 100.0%)
+  unit_1:
+    30500: "SigenStor EC 12.0 TP"   # inverter_model_type
+    30515: "CMU110A144L0174"         # inverter_serial_number
+
+# Time-series samples, unit 247, as actually observed (elapsed seconds
+# from first read). grid_sensor_status stayed 1 ("connected", i.e. the
+# external CT/meter accessory is present -- NOT "grid power available",
+# see docs/PRD.md's corrected mapping) throughout; on_off_grid_status
+# stayed 1 (off-grid/EPS) throughout -- this device was genuinely
+# islanded and discharging the whole capture window, not a transition.
+timeseries:
+  - t: 0
+    30004: 1      # grid_sensor_status: connected (sensor present, NOT grid power)
+    30009: 1      # on_off_grid_status: off-grid (auto/EPS)
+    30014: 384    # ess_soc raw (gain 10 -> 38.4%)
+    30037: [65535, 63519]   # ess_power raw regs, S32 gain 1000 -> -2.017 kW (discharging)
+  - t: ~15        # approx, second probe run shortly after the first
+    30004: 1
+    30009: 1
+    30014: 382    # -> 38.2%
+    30037: null   # not re-read at this sample point
+  - t: ~30        # approx, third probe run
+    30004: 1
+    30009: 1
+    30014: 377    # -> 37.7%
+    30037: [65535, 63541]   # -> -1.946 kW
+    30005: [0, 0]            # grid_sensor_active_power -> 0 kW (off-grid, no import/export)
+    30035: [0, 0]            # pv_plant_power -> 0 kW (no solar at capture time)
+
+notes: |
+  Derived at the time: ~1.95 kW continuous load, 100% sourced from the
+  battery (grid=0, PV=0). At ~7.08 kWh available discharge capacity and
+  ~1.95 kW draw, that's roughly 3.5h runtime remaining at that rate --
+  a real, human-sanity-checked number, useful as a reference point for
+  validating the driver's own battery.runtime estimate formula later.

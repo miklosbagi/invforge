@@ -1,0 +1,38 @@
+# Synthetic scenario -- NOT captured from a real device. The Modbus TCP
+# listener is genuinely unreachable during the offline: window below
+# (core/connectivity.py drops the real socket, not just a register-level
+# exception), then comes back automatically -- exercises whether a NUT
+# driver surfaces DATASTALE and recovers, rather than misreporting a
+# stale last-known value as current.
+static:
+  unit_247:
+    30047: 8800
+    30049: 9600
+    30064: 1800
+    30066: 1800
+    30068: 8800
+    30070: 9600
+    30083: 1800
+    30085: 1000
+    30086: 100
+    30087: 1000
+    30004: 0
+    30005: 0
+    30009: 0
+    30014: 620    # ess_soc (gain 10 -> 62.0%), constant throughout
+    30027: 0
+    30028: 0
+    30029: 0
+    30030: 0
+    30035: 0
+    30037: 0
+    30051: 1
+    30072: 0
+    30280: 0
+  unit_1:
+    30500: "SigenStor SYNTHETIC-OFFLINE"
+    30515: "SYNTH-OFFLINE-0001"
+    30525: "0.0.0-synthetic"
+
+offline:
+  - { start: 3, end: 8 }   # unreachable for 5s starting at scenario t=3
