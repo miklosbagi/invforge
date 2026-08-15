@@ -1,0 +1,52 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      code-quality: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements-dev.txt
+      - run: ruff format --check invforge tests
+      - run: ruff check invforge tests
+      - run: mypy
+      - run: python -m pytest tests/unit -q --cov=invforge --cov-report=xml
+      - name: Upload coverage report
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/upload-code-coverage@v1
+        with:
+          file: coverage.xml
+          language: Python
+          # Soft-fail until "Code Quality" is enabled in this repo's
+          # Settings -> Code security page (no API for that toggle as of
+          # this writing, so it can't be flipped from here) -- without
+          # this, every CI run hard-fails on a 404 from the upload
+          # endpoint before that's turned on.
+          fail-on-error: false
+
+  integration:
+    runs-on: ubuntu-latest
+    needs: unit
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements-dev.txt
+      - run: docker compose up -d --build
+      - run: scripts/wait-healthy.sh invforge
+      - run: python -m pytest tests/integration -q
+        env:
+          INVFORGE_MODBUS_PORT: "5020"
+          INVFORGE_CONTROL_PORT: "8080"
+      - if: failure()
+        run: docker compose logs
+      - if: always()
+        run: docker compose down
