@@ -1,0 +1,101 @@
+# Real register readings, captured live from sigenergy-inverter-0.energy.mb:502
+# on 2026-08-14 across several read-only sessions during the same steady
+# idle state (battery full, no load, no PV, not yet grid-tied/commissioned
+# for export). Not a single atomic register dump -- unit 1's fields (which
+# can't vary over this engine's timeseries, only unit 247's default-unit
+# registers can) are frozen at one representative moment; unit 247's
+# timeseries samples below carry the small real sensor jitter actually
+# observed across multiple reads a few seconds apart, not invented noise.
+#
+# Notable real detail worth preserving, not smoothing away: the inverter's
+# own lifetime PV total generation (31511-31512) reads only ~12.9 kWh --
+# consistent with a very recently commissioned installation, matching the
+# "can't export to grid yet" state this capture was taken in.
+static:
+  unit_247:
+    30047: 0   # ess_avail_max_charge_power (decoded: 0)
+    30049: 14401   # ess_avail_max_discharge_power (decoded: 14.401)
+    30064: 0   # ess_avail_max_charge_capacity (decoded: 0)
+    30066: 1927   # ess_avail_max_discharge_capacity (decoded: 19.27)
+    30068: 8800   # ess_rated_charge_power (decoded: 8.8)
+    30070: 9600   # ess_rated_discharge_power (decoded: 9.6)
+    30083: 1808   # ess_rated_energy_capacity (decoded: 18.08)
+    30085: 1000   # ess_charge_cutoff_soc (decoded: 100)
+    30086: 0   # ess_discharge_cutoff_soc (decoded: 0)
+    30087: 1000   # ess_soh (decoded: 100)
+    30276: 5000   # grid_code_rated_frequency (decoded: 50.00 Hz -- configured, not live)
+    30277: 23000   # grid_code_rated_voltage (decoded: 230.00 V -- configured, not live)
+  unit_1:
+    30500: "SigenStor EC 12.0 TP"   # inverter_model_type
+    30515: "CMU110A144L0174"   # inverter_serial_number
+    30525: "V100R001C21SPC116"   # inverter_firmware_version
+    30540: 12000   # inverter_rated_active_power (decoded: 12.0 -- matches "EC 12.0" nameplate)
+    31000: 2300   # rated_grid_voltage (decoded: 230.0)
+    31001: 5000   # rated_grid_frequency (decoded: 50.00)
+    31004: 2   # output_type (decoded: 2 = L1/L2/L3/N)
+    31024: 2   # pack_count (2 battery packs)
+    31025: 3   # pv_string_count (3 PV strings)
+    31026: 3   # mppt_count
+    30578: 1   # inverter_running_state (decoded: 1 = Running)
+    30587: 0   # inverter_active_power (decoded: 0.0)
+    30599: -3   # ess_charge_discharge_power (decoded: -0.003)
+    30601: 1000   # ess_battery_soc (decoded: 100.0)
+    30602: 1000   # ess_battery_soh (decoded: 100.0)
+    30603: 380   # ess_average_cell_temperature_inv (decoded: 38.0)
+    30604: 3404   # ess_average_cell_voltage (decoded: 3.404 V)
+    30605: 0   # inverter_alarm1
+    30606: 0   # inverter_alarm2
+    30607: 0   # inverter_alarm3
+    30608: 0   # inverter_alarm4
+    30609: 0   # inverter_alarm5
+    31002: 5001   # grid_frequency (decoded: 50.01 -- live measurement, real ~50Hz jitter)
+    31003: 546   # pcs_internal_temperature (decoded: 54.6)
+    31011: 24041   # phase_a_voltage (decoded: 240.41)
+    31013: 23854   # phase_b_voltage (decoded: 238.54)
+    31015: 23508   # phase_c_voltage (decoded: 235.08)
+    31017: 47   # phase_a_current (decoded: 0.47 -- negligible, matches ~zero measured load)
+    31019: 47   # phase_b_current (decoded: 0.47)
+    31021: 46   # phase_c_current (decoded: 0.46)
+    31027: 5765   # pv1_voltage (decoded: 576.5 -- open-circuit-shaped, near-zero current)
+    31028: 9   # pv1_current (decoded: 0.09)
+    31029: 5144   # pv2_voltage (decoded: 514.4)
+    31030: 13   # pv2_current (decoded: 0.13)
+    31031: 0   # pv3_voltage (decoded: 0.0 -- string 3 reads no data at capture time)
+    31032: 0   # pv3_current (decoded: 0.0)
+    31035: 0   # pv_power (decoded: 0.0)
+    31037: 668   # insulation_resistance (decoded: 0.668 MOhm)
+    31509: 1289   # pv_daily_generation (decoded: 12.89 kWh)
+    31511: 1290   # pv_total_generation (decoded: 12.90 kWh -- lifetime total, very new install)
+
+timeseries:
+  - t: 0.0
+    30004: 0   # grid_sensor_status (decoded: 0 -- no CT/meter accessory configured)
+    30005: 0   # grid_active_power (decoded: 0)
+    30009: 0   # on_off_grid_status (decoded: 0 = on grid; see sigennut/docs/PRD.md R11)
+    30014: 1000   # ess_soc (decoded: 100)
+    30027: 0   # general_alarm1
+    30028: 0   # general_alarm2
+    30029: 0   # general_alarm3
+    30030: 0   # general_alarm4
+    30035: 0   # pv_plant_power (decoded: 0)
+    30037: -3   # ess_power (decoded: -0.003)
+    30051: 1   # plant_running_state (decoded: 1 = Running)
+    30072: 0   # general_alarm5
+    30272: 1289   # pv_total_daily_generation (decoded: 12.89 kWh)
+    30274: 0   # pv_total_generation_previous_day (decoded: 0 -- very new install)
+    30279: 65535   # current_control_command_value (Japan remote-output-control register, unpopulated sentinel here)
+    30280: 0   # general_alarm6
+    30281: 65535   # general_alarm7 (0xFFFF sentinel; solo-read-illegal on the real device, see registers.py)
+    30282: 0   # general_load_power (decoded: 0.0)
+    30284: 0   # total_load_power (decoded: 0.0)
+    30286: 379   # ess_average_cell_temperature (decoded: 37.9)
+  - t: 10.0
+    30035: 6   # pv_plant_power (decoded: 0.006 -- real jitter observed a few seconds later)
+    30037: -4   # ess_power (decoded: -0.004)
+    30272: 1290   # pv_total_daily_generation (decoded: 12.90 kWh)
+    30286: 380   # ess_average_cell_temperature (decoded: 38.0)
+  - t: 20.0
+    30035: 0   # pv_plant_power (decoded: 0.0)
+    30037: -3   # ess_power (decoded: -0.003)
+    30272: 1290
+    30286: 379

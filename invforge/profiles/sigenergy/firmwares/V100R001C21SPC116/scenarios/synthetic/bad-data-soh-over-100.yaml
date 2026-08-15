@@ -1,0 +1,35 @@
+# Synthetic scenario -- NOT captured from a real device. Deliberately
+# wire-legal but semantically impossible: ess_soh (U16, gain 10) can
+# represent any value 0-6553.5%, so 150.0% state-of-health is a value
+# a driver could receive with no protocol-level error. Exercises whether
+# a NUT driver clamps/rejects battery.charge.warning-adjacent SoH data
+# outside 0-100 rather than trusting the wire value blindly.
+static:
+  unit_247:
+    30047: 8800    # ess_avail_max_charge_power (gain 1000 -> 8.8 kW)
+    30049: 9600    # ess_avail_max_discharge_power (gain 1000 -> 9.6 kW)
+    30064: 1800    # ess_avail_max_charge_capacity (gain 100 -> 18.0 kWh)
+    30066: 1800    # ess_avail_max_discharge_capacity (gain 100 -> 18.0 kWh)
+    30068: 8800    # ess_rated_charge_power
+    30070: 9600    # ess_rated_discharge_power
+    30083: 1800    # ess_rated_energy_capacity (gain 100 -> 18.0 kWh)
+    30085: 1000    # ess_charge_cutoff_soc (gain 10 -> 100.0%)
+    30086: 100     # ess_discharge_cutoff_soc (gain 10 -> 10.0%)
+    30087: 1500    # ess_soh (gain 10 -> 150.0% -- INVALID, out of range)
+    30004: 0       # grid_sensor_status
+    30005: 0       # grid_active_power
+    30009: 0       # on_off_grid_status
+    30014: 620     # ess_soc (gain 10 -> 62.0%, normal)
+    30027: 0
+    30028: 0
+    30029: 0
+    30030: 0
+    30035: 0       # pv_plant_power
+    30037: 0       # ess_power (idle)
+    30051: 1       # plant_running_state
+    30072: 0
+    30280: 0
+  unit_1:
+    30500: "SigenStor SYNTHETIC-BADDATA"
+    30515: "SYNTH-BADDATA-0002"
+    30525: "0.0.0-synthetic"

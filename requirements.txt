@@ -1,0 +1,10 @@
+# Pinned to 3.6.9 deliberately, not "latest" -- pymodbus 3.15 (current at
+# time of writing) refactored its server-side datastore into a different
+# SimData-based simulator framework (ModbusSlaveContext/getValues/setValues
+# no longer exist the way this package uses them). This is our own
+# controlled test tooling, not something that needs the bleeding edge;
+# revisit the pin deliberately, not via an incidental `pip install -U`.
+pymodbus==3.6.9
+pyyaml>=6.0
+fastapi>=0.110
+uvicorn>=0.29
