@@ -1,3 +1,5 @@
+🇬🇧 [English](README.md) | 🇭🇺 [Magyar](README.hu.md)
+
 # InvForge
 
 A fake Modbus TCP inverter/BESS, for testing Modbus-speaking clients
@@ -8,11 +10,11 @@ units, and scenario fixtures live in their own profile
 (`invforge/profiles/<vendor>/`).
 
 Originally extracted and generalized from a single-vendor Sigenergy
-simulator built for [sigennut](../sigennut); ported here as the first
-profile (`invforge/profiles/sigenergy/`) so the same emulator can grow to
-cover other inverter/BESS families (Deye/SunSynk, Victron GX, Growatt,
-SolarEdge, ...) as they're needed by [nut-sigenergy](../nut-sigenergy)
-or other consumers.
+simulator built for [sigennut](https://github.com/miklosbagi/sigennut);
+ported here as the first profile (`invforge/profiles/sigenergy/`) so the
+same emulator can grow to cover other inverter/BESS families
+(Deye/SunSynk, Victron GX, Growatt, SolarEdge, ...) as they're needed by
+the NUT driver work sigennut supports, or other consumers.
 
 ## Quickstart
 
