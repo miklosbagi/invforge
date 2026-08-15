@@ -35,10 +35,7 @@ from typing import cast
 
 import yaml
 
-# Not a real runtime cycle: profile.py never imports this module except
-# under `if TYPE_CHECKING:` (see profile.py), which doesn't execute at
-# runtime.
-from .profile import Profile  # codeql[py/unsafe-cyclic-import]
+from .profile import Profile
 from .registers import DType, RegisterDef, normalize_scenario_value
 
 

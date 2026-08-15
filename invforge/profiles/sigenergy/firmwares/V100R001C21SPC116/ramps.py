@@ -16,7 +16,7 @@ these scenarios exercise, not power-reading fidelity.
 
 from __future__ import annotations
 
-from invforge.core.generator import RampParams
+from invforge.core.ramp_params import RampParams
 
 _RATED_CAPACITY_KWH = 18.0  # matches this firmware's other synthetic fixtures' 30083 (gain 100 -> raw 1800)
 

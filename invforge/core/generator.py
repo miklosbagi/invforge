@@ -9,29 +9,16 @@ are combined; an existing YAML of the same name always wins.
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass
 from typing import Literal
 
-# Not a real runtime cycle: profile.py's reciprocal import of this module
-# is guarded by `if TYPE_CHECKING:` (see profile.py), which is False at
-# runtime, so Python never executes that import line. mypy resolves the
-# annotation-only cycle fine too, since every module here uses
-# `from __future__ import annotations`.
-from .profile import Profile  # codeql[py/unsafe-cyclic-import]
-from .scenario import Scenario  # codeql[py/unsafe-cyclic-import]
+from .profile import Profile
+from .ramp_params import RampParams
+from .scenario import Scenario
 
 _RAMP_RE = re.compile(
     r"^linear-(?P<direction>drain|charge)-(?P<start>\d+(?:\.\d+)?)-to-"
     r"(?P<end>\d+(?:\.\d+)?)-(?P<duration>\d+(?:\.\d+)?)s$"
 )
-
-
-@dataclass(frozen=True)
-class RampParams:
-    direction: Literal["drain", "charge"]
-    start_pct: float
-    end_pct: float
-    duration_s: float
 
 
 def resolve_generated(name: str, profile: Profile) -> Scenario | None:
